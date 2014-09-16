@@ -375,9 +375,9 @@ void main(void)
    ECanaMboxes.MBOX26.MSGCTRL.bit.DLC = 8;
 /******************************* SEND laser Off Command********************************************/
 /* Write to the MSGID field */
-   ECanaMboxes.MBOX27.MSGID.bit.EXTMSGID_L =0x0002;//À©Õ¹Ö¡ID£º0x00000002
-   ECanaMboxes.MBOX27.MSGID.bit.EXTMSGID_H=0x00;
-   ECanaMboxes.MBOX27.MSGID.bit.STDMSGID=0x00;
+   ECanaMboxes.MBOX27.MSGID.bit.EXTMSGID_L =0x1210;//À©Õ¹Ö¡ID£º0x00000002
+   ECanaMboxes.MBOX27.MSGID.bit.EXTMSGID_H=0x01;
+   ECanaMboxes.MBOX27.MSGID.bit.STDMSGID=0x04;
    ECanaMboxes.MBOX27.MSGID.bit.IDE=1;
 /* Configure Mailbox under test as a Transmit mailbox */
    ECanaShadow.CANMD.all = ECanaRegs.CANMD.all;
@@ -391,7 +391,7 @@ void main(void)
    ECanaMboxes.MBOX27.MSGCTRL.bit.DLC = 8;
 /******************************* SEND map point cooridinate********************************************/
 /* Write to the MSGID field */
-   ECanaMboxes.MBOX28.MSGID.bit.EXTMSGID_L =0x0003;//À©Õ¹Ö¡ID£º0x00000003
+   ECanaMboxes.MBOX28.MSGID.bit.EXTMSGID_L =0x0002;//À©Õ¹Ö¡ID£º0x00000003
    ECanaMboxes.MBOX28.MSGID.bit.EXTMSGID_H=0x00;
    ECanaMboxes.MBOX28.MSGID.bit.STDMSGID=0x00;
    ECanaMboxes.MBOX28.MSGID.bit.IDE=1;
@@ -708,7 +708,7 @@ void main(void)
 					   ////////
 					   ///transformation of coordinates
 						long temp_current_x=(long)current_pos.x;
-						long temp_current_y=(long)(-current_pos.y);
+						long temp_current_y=(long)(current_pos.y);
 					   
 						if(current_pos.x>0)
 						{
@@ -848,6 +848,7 @@ void main(void)
 				  	{
 				  		
 				  		   ////TURN OFF LASER 
+				  		   ///HANDLE TO NEXT STATION
 				  		ECanaMboxes.MBOX27.MDH.all=0; 
 				  		ECanaMboxes.MBOX27.MDL.all=0; 
 				  		ECanaMboxes.MBOX27.MDL.byte.BYTE0=baseIndex;
@@ -861,19 +862,19 @@ void main(void)
 					    ECanaShadow.CANTA.all = 0;
 					    ECanaShadow.CANTA.bit.TA27 = 1; // Clear TA5
 					    ECanaRegs.CANTA.all = ECanaShadow.CANTA.all;
-				  		////HANDLE TO NEXT STATION 
-				  		ECanaMboxes.MBOX29.MDH.all=0; 
-				  		ECanaMboxes.MBOX29.MDL.all=0; 
-				  		ECanaMboxes.MBOX29.MDL.byte.BYTE0=baseIndex;
+				  		////TURN OFF LASER
+				  		ECanaMboxes.MBOX28.MDH.all=0; 
+				  		ECanaMboxes.MBOX28.MDL.all=0; 
+				  		ECanaMboxes.MBOX28.MDL.byte.BYTE0=1;
 						ECanaShadow.CANTRS.all = 0;
-					    ECanaShadow.CANTRS.bit.TRS29 = 1; // Set TRS for mailbox under test
+					    ECanaShadow.CANTRS.bit.TRS28 = 1; // Set TRS for mailbox under test
 					    ECanaRegs.CANTRS.all = ECanaShadow.CANTRS.all;
 					    do // Send 00110000
 					    {
 					      ECanaShadow.CANTA.all = ECanaRegs.CANTA.all;
-					    } while(ECanaShadow.CANTA.bit.TA29 == 0 );
+					    } while(ECanaShadow.CANTA.bit.TA28 == 0 );
 					    ECanaShadow.CANTA.all = 0;
-					    ECanaShadow.CANTA.bit.TA29 = 1; // Clear TA5
+					    ECanaShadow.CANTA.bit.TA28 = 1; // Clear TA5
 					    ECanaRegs.CANTA.all = ECanaShadow.CANTA.all;
 					    
 					    ///////////
@@ -1271,7 +1272,7 @@ int TargetInWorkingZone(Coor c)
 	tY=c.y;
 	float gX=Map[MapPointCountCount-1].x;
 	float gY=Map[MapPointCountCount-1].y;
-	if((tX-gX)*(tX-gX)+(tY-gY)*(tY-gY)<=8500000)
+	if((tX-gX)*(tX-gX)+(tY-gY)*(tY-gY)<=10500000)
 	{
 		return FALSE;
 	}
