@@ -123,6 +123,7 @@
 #define scan_speed 3500
 #define guidance_speed_low 2500
 #define guidance_speed PRD/14
+#define SwitchDistance 18500000
 Uint16    *ExRamStart = (Uint16 *)0x100000;
 
 void initEpwm();
@@ -1272,7 +1273,7 @@ int TargetInWorkingZone(Coor c)
 	tY=c.y;
 	float gX=Map[MapPointCountCount-1].x;
 	float gY=Map[MapPointCountCount-1].y;
-	if((tX-gX)*(tX-gX)+(tY-gY)*(tY-gY)<=10500000)
+	if((tX-gX)*(tX-gX)+(tY-gY)*(tY-gY)<=SwitchDistance)
 	{
 		return FALSE;
 	}
