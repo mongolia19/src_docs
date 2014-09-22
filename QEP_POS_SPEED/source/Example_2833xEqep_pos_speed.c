@@ -104,7 +104,14 @@
 #define DIR GpioDataRegs.GPBDAT.bit.GPIO48
 #define DIR1 GpioDataRegs.GPBDAT.bit.GPIO52
 #define Pwm2_Gpio GpioDataRegs.GPADAT.bit.GPIO1
- 
+
+#define HCP_RDY GpioDataRegs.GPADAT.bit.GPIO20//input high means already at zero point
+#define ZST GpioDataRegs.GPBDAT.bit.GPIO49// output let servo move to zero
+
+#define HCP_RDY1 GpioDataRegs.GPADAT.bit.GPIO21//input high means already at zero point
+#define ZST1 GpioDataRegs.GPADAT.bit.GPIO8// output let servo move to zero
+
+
 
 #define FINISH 0
 #define NOTFINISH 1
@@ -150,10 +157,13 @@ void initEpwm1B();
 void initEpwm2A();
 void initGpio_pwm();
 
+#define HorizatalConst TotalLoopCount*30/360  //inital angle on x
+#define VerticalConst -30*TotalLoopCountV/360  //inital angle on y
+
 long angle=0;  //horizatal degree counter 
 long angle_sendout=0;
 
-long angleY=0;  //vertical degree counter
+long angleY=VerticalConst;  //vertical degree counter
 
 long distance;
 long polar_angle_count;
@@ -332,7 +342,7 @@ void main(void)
      ECanaMboxes.MBOX4.MSGID.bit.IDE=1;//扩展帧，如为0
 	 ECanaMboxes.MBOX4.MSGID.bit.AME=0;//屏蔽位
 	 
-	 ECanaMboxes.MBOX5.MSGID.bit.EXTMSGID_L =0x1010;//扩展帧ID：0x00111210 switch base
+	 ECanaMboxes.MBOX5.MSGID.bit.EXTMSGID_L =0x1010;//扩展帧ID：0x00111210 z axis Height
      ECanaMboxes.MBOX5.MSGID.bit.EXTMSGID_H=0x01;
      ECanaMboxes.MBOX5.MSGID.bit.STDMSGID=0x04;//04
      ECanaMboxes.MBOX5.MSGID.bit.IDE=1;//扩展帧，如为0
@@ -382,6 +392,18 @@ void main(void)
    
    
    swing_speed=PRD/4;
+   
+   
+   ZST=0;
+   ZST1=0;
+   while(!((HCP_RDY==0)&&(HCP_RDY1==0)))
+   {
+   ;
+   
+   }
+   GpioDataRegs.GPBTOGGLE.bit.GPIO49=1;
+   GpioDataRegs.GPATOGGLE.bit.GPIO8=1;
+   
   while(1)
    {  
    		//float testa=calulate_from_edges((float)3,(float)4,(float)5);
@@ -538,7 +560,7 @@ void main(void)
 					   ////////
 					   ///transformation of coordinates
 						long temp_current_x=(long)current_pos.x;
-						long temp_current_y=(long)(-current_pos.y);
+						long temp_current_y=(long)(current_pos.y);
 					   
 						if(current_pos.x>0)
 						{
@@ -685,7 +707,7 @@ void main(void)
           followZHeight=CAN_RxBuffer[0]<<24+CAN_RxBuffer[1]<<16+CAN_RxBuffer[2]<<8+CAN_RxBuffer[3];
       	 
 		 }
-		 angle=-((long)EQep1Regs.QPOSCNT);
+		 angle=-((long)EQep1Regs.QPOSCNT)+HorizatalConst;
 		 
 	
 		 
@@ -693,6 +715,7 @@ void main(void)
    	{
    		 
    	 	scan();
+   	 	stable_2Vertical((float)0, (float)angleY,(long)TotalLoopCountV);
    	 	if(isFirstScan==TRUE)
    	 	{
    	 		stable_2Vertical((float)0, (float)angleY,(long)TotalLoopCountV);

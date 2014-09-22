@@ -190,16 +190,28 @@ void InitXintf16Gpio()
      EALLOW;
      GpioCtrlRegs.GPAMUX1.bit.GPIO0= 0;  //配置为IO功能
 	 GpioCtrlRegs.GPADIR.bit.GPIO0 = 1;   //配置为输出功能
-    GpioCtrlRegs.GPAMUX1.bit.GPIO1= 0;  //配置为IO功能
+     GpioCtrlRegs.GPAMUX1.bit.GPIO1= 0;  //配置为IO功能
 	 GpioCtrlRegs.GPADIR.bit.GPIO1 = 1;   //配置为输出功能
 
 
      GpioCtrlRegs.GPBMUX2.bit.GPIO48 = 0;  //配置为IO功能
 	 GpioCtrlRegs.GPBDIR.bit.GPIO48 = 1;  //配置为输出功能
-	   GpioCtrlRegs.GPBMUX2.bit.GPIO52 = 0;  //配置为IO功能
+     GpioCtrlRegs.GPBMUX2.bit.GPIO52 = 0;  //配置为IO功能
 	 GpioCtrlRegs.GPBDIR.bit.GPIO52  = 1;  //配置为输出功能
 	
+	 GpioCtrlRegs.GPAMUX1.bit.GPIO8 = 0;  //配置为IO功能       ZST1
+	 GpioCtrlRegs.GPADIR.bit.GPIO8  = 1;  //配置为输出功能  ZST1
 	 
+	 GpioCtrlRegs.GPAMUX2.bit.GPIO20 = 0;  //配置为IO功能1  
+	 GpioCtrlRegs.GPADIR.bit.GPIO20  = 0;  //配置为input1
+	 GpioCtrlRegs.GPAPUD.bit.GPIO20 = 1;   // disable up pull
+	  
+	 GpioCtrlRegs.GPBMUX2.bit.GPIO49 = 0;  //配置为IO功能       ZST
+	 GpioCtrlRegs.GPBDIR.bit.GPIO49  = 1;  //配置为输出功能  ZST
+	 
+	 GpioCtrlRegs.GPAMUX2.bit.GPIO21 = 0;  //配置为IO功能  
+	 GpioCtrlRegs.GPADIR.bit.GPIO21  = 0;  //配置为input
+	 GpioCtrlRegs.GPAPUD.bit.GPIO21 = 1;   //disable up pull
 
      GpioCtrlRegs.GPCMUX1.bit.GPIO64 = 3;  // XD15
      GpioCtrlRegs.GPCMUX1.bit.GPIO65 = 3;  // XD14
