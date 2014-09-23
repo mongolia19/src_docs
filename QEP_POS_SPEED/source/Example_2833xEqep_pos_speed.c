@@ -538,7 +538,7 @@ void main(void)
 					   ////////
 					   ///transformation of coordinates
 						long temp_current_x=(long)current_pos.x;
-						long temp_current_y=(long)(-current_pos.y);
+						long temp_current_y=(long)(current_pos.y);
 					   
 						if(current_pos.x>0)
 						{
