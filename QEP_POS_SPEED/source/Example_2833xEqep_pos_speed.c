@@ -634,7 +634,62 @@ void main(void)
 				}
 				//CAN_RxBuffer[7]=ECanaMboxes.MBOX1.MDH.byte.BYTE7;
 			 	
-          		
+          if(distance_valid_flag==1&&shouldTurnOffFlag==FALSE)/////distance valid and itself should work
+		        {
+		           		
+		           		
+				////////////////////////////
+				///////send out can msg
+				
+						ECanaMboxes.MBOX26.MDL.all = 0;
+					    ECanaMboxes.MBOX26.MDH.all = 0;
+					   ////////
+					   ///transformation of coordinates
+						long temp_current_x=(long)current_pos.x;
+						long temp_current_y=(long)(current_pos.y);
+					   
+						if(current_pos.x>0)
+						{
+							ECanaMboxes.MBOX26.MDH.byte.BYTE6=0x01;
+							temp_current_x=(Uint32)temp_current_x;
+						}
+						else
+						{
+							ECanaMboxes.MBOX26.MDH.byte.BYTE6=0x00;
+							temp_current_x=-temp_current_x;
+							temp_current_x=(Uint32)temp_current_x;
+						}
+						if(temp_current_y>0)
+						{
+							ECanaMboxes.MBOX26.MDH.byte.BYTE7=0x01;  
+							 temp_current_y=(Uint32)temp_current_y;
+						}
+						else
+						{
+							ECanaMboxes.MBOX26.MDH.byte.BYTE7=0x00; 
+							temp_current_y=-temp_current_y;
+							temp_current_y=(Uint32)temp_current_y;
+						}
+						ECanaMboxes.MBOX26.MDL.byte.BYTE0=(Uint16)(((Uint32)temp_current_x)>>16);
+					    ECanaMboxes.MBOX26.MDL.byte.BYTE1=(Uint16)(((Uint32)temp_current_x)>>8);
+					    ECanaMboxes.MBOX26.MDL.byte.BYTE2=(Uint16)((Uint32)temp_current_x);
+						ECanaMboxes.MBOX26.MDH.byte.BYTE5=(Uint16)(((Uint32)temp_current_y));
+						ECanaMboxes.MBOX26.MDH.byte.BYTE4=(Uint16)(((Uint32)temp_current_y)>>8);
+						ECanaMboxes.MBOX26.MDL.byte.BYTE3=(Uint16)(((Uint32)temp_current_y)>>16);
+						
+					    ECanaShadow.CANTRS.all = 0;
+					    ECanaShadow.CANTRS.bit.TRS26 = 1; // Set TRS for mailbox under test
+					    ECanaRegs.CANTRS.all = ECanaShadow.CANTRS.all;
+					    do // Send 00110000
+					    {
+					      ECanaShadow.CANTA.all = ECanaRegs.CANTA.all;
+					    } while(ECanaShadow.CANTA.bit.TA26 == 0 );
+					    ECanaShadow.CANTA.all = 0;
+					    ECanaShadow.CANTA.bit.TA26 = 1; // Clear TA5
+					    ECanaRegs.CANTA.all = ECanaShadow.CANTA.all;
+			
+		           		
+		        }		
       	 
 		 }
 		 //////////////////////////////////
@@ -704,52 +759,52 @@ void main(void)
 				////////////////////////////
 				///////send out can msg
 				
-						ECanaMboxes.MBOX26.MDL.all = 0;
-					    ECanaMboxes.MBOX26.MDH.all = 0;
-					   ////////
-					   ///transformation of coordinates
-						long temp_current_x=(long)current_pos.x;
-						long temp_current_y=(long)(current_pos.y);
-					   
-						if(current_pos.x>0)
-						{
-							ECanaMboxes.MBOX26.MDH.byte.BYTE6=0x01;
-							temp_current_x=(Uint32)temp_current_x;
-						}
-						else
-						{
-							ECanaMboxes.MBOX26.MDH.byte.BYTE6=0x00;
-							temp_current_x=-temp_current_x;
-							temp_current_x=(Uint32)temp_current_x;
-						}
-						if(temp_current_y>0)
-						{
-							ECanaMboxes.MBOX26.MDH.byte.BYTE7=0x01;  
-							 temp_current_y=(Uint32)temp_current_y;
-						}
-						else
-						{
-							ECanaMboxes.MBOX26.MDH.byte.BYTE7=0x00; 
-							temp_current_y=-temp_current_y;
-							temp_current_y=(Uint32)temp_current_y;
-						}
-						ECanaMboxes.MBOX26.MDL.byte.BYTE0=(Uint16)(((Uint32)temp_current_x)>>16);
-					    ECanaMboxes.MBOX26.MDL.byte.BYTE1=(Uint16)(((Uint32)temp_current_x)>>8);
-					    ECanaMboxes.MBOX26.MDL.byte.BYTE2=(Uint16)((Uint32)temp_current_x);
-						ECanaMboxes.MBOX26.MDH.byte.BYTE5=(Uint16)(((Uint32)temp_current_y));
-						ECanaMboxes.MBOX26.MDH.byte.BYTE4=(Uint16)(((Uint32)temp_current_y)>>8);
-						ECanaMboxes.MBOX26.MDL.byte.BYTE3=(Uint16)(((Uint32)temp_current_y)>>16);
-						
-					    ECanaShadow.CANTRS.all = 0;
-					    ECanaShadow.CANTRS.bit.TRS26 = 1; // Set TRS for mailbox under test
-					    ECanaRegs.CANTRS.all = ECanaShadow.CANTRS.all;
-					    do // Send 00110000
-					    {
-					      ECanaShadow.CANTA.all = ECanaRegs.CANTA.all;
-					    } while(ECanaShadow.CANTA.bit.TA26 == 0 );
-					    ECanaShadow.CANTA.all = 0;
-					    ECanaShadow.CANTA.bit.TA26 = 1; // Clear TA5
-					    ECanaRegs.CANTA.all = ECanaShadow.CANTA.all;
+//						ECanaMboxes.MBOX26.MDL.all = 0;
+//					    ECanaMboxes.MBOX26.MDH.all = 0;
+//					   ////////
+//					   ///transformation of coordinates
+//						long temp_current_x=(long)current_pos.x;
+//						long temp_current_y=(long)(current_pos.y);
+//					   
+//						if(current_pos.x>0)
+//						{
+//							ECanaMboxes.MBOX26.MDH.byte.BYTE6=0x01;
+//							temp_current_x=(Uint32)temp_current_x;
+//						}
+//						else
+//						{
+//							ECanaMboxes.MBOX26.MDH.byte.BYTE6=0x00;
+//							temp_current_x=-temp_current_x;
+//							temp_current_x=(Uint32)temp_current_x;
+//						}
+//						if(temp_current_y>0)
+//						{
+//							ECanaMboxes.MBOX26.MDH.byte.BYTE7=0x01;  
+//							 temp_current_y=(Uint32)temp_current_y;
+//						}
+//						else
+//						{
+//							ECanaMboxes.MBOX26.MDH.byte.BYTE7=0x00; 
+//							temp_current_y=-temp_current_y;
+//							temp_current_y=(Uint32)temp_current_y;
+//						}
+//						ECanaMboxes.MBOX26.MDL.byte.BYTE0=(Uint16)(((Uint32)temp_current_x)>>16);
+//					    ECanaMboxes.MBOX26.MDL.byte.BYTE1=(Uint16)(((Uint32)temp_current_x)>>8);
+//					    ECanaMboxes.MBOX26.MDL.byte.BYTE2=(Uint16)((Uint32)temp_current_x);
+//						ECanaMboxes.MBOX26.MDH.byte.BYTE5=(Uint16)(((Uint32)temp_current_y));
+//						ECanaMboxes.MBOX26.MDH.byte.BYTE4=(Uint16)(((Uint32)temp_current_y)>>8);
+//						ECanaMboxes.MBOX26.MDL.byte.BYTE3=(Uint16)(((Uint32)temp_current_y)>>16);
+//						
+//					    ECanaShadow.CANTRS.all = 0;
+//					    ECanaShadow.CANTRS.bit.TRS26 = 1; // Set TRS for mailbox under test
+//					    ECanaRegs.CANTRS.all = ECanaShadow.CANTRS.all;
+//					    do // Send 00110000
+//					    {
+//					      ECanaShadow.CANTA.all = ECanaRegs.CANTA.all;
+//					    } while(ECanaShadow.CANTA.bit.TA26 == 0 );
+//					    ECanaShadow.CANTA.all = 0;
+//					    ECanaShadow.CANTA.bit.TA26 = 1; // Clear TA5
+//					    ECanaRegs.CANTA.all = ECanaShadow.CANTA.all;
 			
 		           		
 		        }
