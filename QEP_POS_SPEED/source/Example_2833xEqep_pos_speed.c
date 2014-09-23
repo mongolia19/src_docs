@@ -157,6 +157,7 @@ long angleY=0;  //vertical degree counter
 
 long distance;
 long polar_angle_count;
+long scaleLimit=15;
 long scale=8;
 long scaleY=1;
 long midY=0;
@@ -191,6 +192,7 @@ void stable_2Vertical(float angel_in_degree,float positionCount,long tCount);
 void scan();//x scaning
 void scanY();//y scaning
 void follow(float targetX,float targetY);
+void limitAngleX();
 int TargetInWorkingZone(Coor c);
 
 int PwmOneStepFinishFlag=0;
@@ -686,7 +688,7 @@ void main(void)
       	 
 		 }
 		 angle=-((long)EQep1Regs.QPOSCNT);
-		 
+		 limitAngleX();
 	
 		 
    	if(AutoMode==AutoModeON&&shouldTurnOffFlag==FALSE)//automode is on AND no base has capture the target
@@ -1095,6 +1097,25 @@ void scan()
    	 		}
    	 	}
    	 	drive(3.14/180);
+}
+
+void limitAngleX()
+{
+	if(GetDegreeFromCount(angle)>scaleLimit)
+   	 	{
+   	 		dir=1;
+   	 		
+   	 	} 
+   	 	else
+   	 	{
+   	 		if(GetDegreeFromCount(angle)<-scaleLimit)
+   	 		{
+	   	 		dir=0;
+	   	 		
+   	 		}
+   	 	}
+   	 	
+
 }
 void scanY()
 {
